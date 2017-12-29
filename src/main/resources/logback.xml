@@ -1,0 +1,27 @@
+<configuration>
+    <property name="FLUENTD_HOST" value="${FLUENTD_HOST:-${DOCKER_HOST:-localhost}}"/>
+    <property name="FLUENTD_PORT" value="${FLUENTD_PORT:-24224}"/>
+	<!-- STDOUT -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%-5level %d{yyyy-MM-dd'T'HH:mm:ss.SSS} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- FLUENT -->
+	<appender name="FLUENT" class="ch.qos.logback.more.appenders.DataFluentAppender">
+		<tag>debug</tag>
+		<label>test</label>
+		<remoteHost>${FLUENTD_HOST}</remoteHost>
+		<port>${FLUENTD_PORT}</port>
+		<maxQueueSize>20</maxQueueSize>
+	</appender>
+
+	<logger name="com.dmtrk" level="DEBUG" additivity="false">
+		<appender-ref ref="STDOUT"/>
+		<appender-ref ref="FLUENT"/>
+	</logger>
+
+	<root level="WARN">
+		<appender-ref ref="STDOUT"/>
+	</root>
+</configuration>
